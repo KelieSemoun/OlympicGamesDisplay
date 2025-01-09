@@ -13,10 +13,7 @@ import { Participation } from "./Participation";
 export class Olympic {
     id: string;
 
-    constructor(public country: string) {
-        this.id = crypto.randomUUID().substring(0, 8);
-    }
-    /*constructor(public country: string,
+    constructor(public country: string,
                 public participations: Participation[]) {
         this.id = crypto.randomUUID().substring(0, 8);
     }
@@ -27,5 +24,5 @@ export class Olympic {
             res += this.participations[i].medalsCount;
         }
         return res;
-    }*/
+    }
 }
