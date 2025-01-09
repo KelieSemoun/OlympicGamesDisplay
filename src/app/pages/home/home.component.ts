@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import {
@@ -7,12 +7,15 @@ import {
   ApexResponsive,
   ApexChart
 } from "ng-apexcharts";
+import { Participation } from 'src/app/core/models/Participation';
+import { Olympic } from 'src/app/core/models/Olympic';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
-  labels: any;
+  labels: string[];
+  dataLabels: ApexDataLabels;
 };
 
 @Component({
@@ -21,31 +24,41 @@ export type ChartOptions = {
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  @ViewChild("chart") chart!: ChartComponent;
+  @ViewChild("chart", {static: false}) chart!: ChartComponent;
+  public olympics: Olympic[] = [];
   public chartOptions!: Partial<ChartOptions>;
-  public olympics$: Observable<any> = of(null);
+  public olympics$: Observable<{id: string, country: string, participations: Participation[]}[] | null> = of(null);
 
   constructor(private olympicService: OlympicService) {}
   
   ngOnInit(): void {
-    this.olympics$ = this.olympicService.getOlympics();
-    this.initializeChartOptions();
+    this.olympicService.getOlympics().pipe().subscribe(data => {
+      if(data !== null){
+        for(let i=0 ; i<data.length ; i++){
+          this.olympics.push(new Olympic(data[i].country));
+        }
+        this.initializeChartOptions();
+      }
+    }); 
   }
 
   private initializeChartOptions() : void{
     this.chartOptions = {
-      series: [44, 55, 13, 43, 22],
+      series: [96, 54, 345, 125, 113],
       chart: {
-        width: 380,
+        width: 700,
         type: "pie"
       },
-      labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+      labels: this.getCountryLabels(),
+      dataLabels: {
+        enabled: false
+      },
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 650,
           options: {
             chart: {
-              width: 200
+              width: 400
             },
             legend: {
               position: "bottom"
@@ -54,5 +67,13 @@ export class HomeComponent implements OnInit {
         }
       ]
     };
+  }
+
+  private getCountryLabels(): string[]{
+    let res: string[] = [];
+    for(let i=0 ; i<this.olympics.length ; i++){
+      res.push(this.olympics[i].country);
+    }
+    return res;
   }
 }
