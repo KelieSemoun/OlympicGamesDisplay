@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import {
   ChartComponent,
@@ -7,8 +7,8 @@ import {
   ApexResponsive,
   ApexChart
 } from "ng-apexcharts";
-import { Participation } from 'src/app/core/models/Participation';
 import { Olympic } from 'src/app/core/models/Olympic';
+import { Router } from '@angular/router';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -27,12 +27,11 @@ export class HomeComponent implements OnInit {
   @ViewChild("chart", {static: false}) chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
   public olympics$!: Observable<Olympic[]>;
-  public customOlympics: {id: string, country: string, medalsCount: number}[] = [];
+  private customOlympics: {id: number, country: string, medalsCount: number}[] = [];
 
-  constructor(private olympicService: OlympicService) {}
+  constructor(private olympicService: OlympicService, private router: Router) {}
   
   ngOnInit(): void {
-    console.log('Olypics = ', this.olympicService.getOlympics())
     this.olympics$ = this.olympicService.getOlympics()/*.pipe(
       map((result): {id: string, country: string, medalsCount: number}[]=>{
         if(result !== null){
@@ -53,10 +52,12 @@ export class HomeComponent implements OnInit {
           country: val.country,
           medalsCount: val.participations.reduce((acc, participation) => acc +  Number(participation.medalsCount), 0)
         })).flatMap((data) => this.customOlympics.push(data));
+        console.log("Before error call : ", this.customOlympics);
+        console.log(this.customOlympics[0].country);
+        this.initializeChartOptions();
       }
-    )
-    console.log(this.customOlympics);
-    this.initializeChartOptions();
+    )    
+
     /*this.olympicService.getOlympics().subscribe(data => {
       if(data !== null){
         for(let i=0 ; i<data.length ; i++){
@@ -69,12 +70,17 @@ export class HomeComponent implements OnInit {
 
   private initializeChartOptions() : void{
     this.chartOptions = {
-      series: [96, 54, 345, 125, 113],
+      series: this.getMedalsCount(),
       chart: {
         width: 700,
-        type: "pie"
+        type: "pie",
+        events: {
+          click: (e, ctx, opts) => {
+            this.router.navigateByUrl(`countries/${this.customOlympics[opts.dataPointIndex].id}`);
+          }
+        }
       },
-      labels: ["Italy", "Spain", "United States", "Germany", "France"],//this.getCountryLabels(),
+      labels: this.getCountryLabels(),
       dataLabels: {
         enabled: false
       },
@@ -92,13 +98,22 @@ export class HomeComponent implements OnInit {
         }
       ]
     };
+    console.log(this.chartOptions);
   }
 
- /* private getCountryLabels(): string[]{
+  private getCountryLabels(): string[]{
     let res: string[] = [];
-    for(let i=0 ; i<this.olympics.length ; i++){
-      res.push(this.olympics[i].country);
+    for(let i=0 ; i<this.customOlympics.length ; i++){
+      res.push(this.customOlympics[i].country);
     }
     return res;
-  }*/
+  }
+
+  private getMedalsCount(): ApexNonAxisChartSeries{
+    let res: ApexNonAxisChartSeries = [];
+    for(let i=0 ; i<this.customOlympics.length ; i++){
+      res.push(this.customOlympics[i].medalsCount);
+    }
+    return res;
+  }
 }

@@ -1,7 +1,6 @@
 <h2>Olympic games app</h2>
 <hr />
 <p>{{ (olympics$ | async)?.length }} data loaded</p>
-@if (olympics$ !== null){
 <div id="chart">
     <apx-chart
       [series]="chartOptions.series!"
@@ -11,6 +10,3 @@
       [responsive]="chartOptions.responsive!"
     ></apx-chart>
   </div>
-} @else {
-<p>Awaiting data...</p>
-}
