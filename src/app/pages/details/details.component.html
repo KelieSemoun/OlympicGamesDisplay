@@ -1,14 +1,35 @@
 <a routerLink="">Return to home page</a>
-<div id="lineChart">
-    <apx-chart
-      [series]="chartOptions.series!"
-      [chart]="chartOptions.chart!"
-      [xaxis]="chartOptions.xaxis!"
-      [yaxis]="chartOptions.yaxis!"
-      [dataLabels]="chartOptions.dataLabels!"
-      [grid]="chartOptions.grid!"
-      [stroke]="chartOptions.stroke!"
-      [title]="chartOptions.title!"
-    ></apx-chart>
+@if (currentOlympic !== undefined) {
+  <p>Data successfully loaded</p>
+} @else {
+  <p>Failed to load country details</p>
+}
+<div *ngIf="currentOlympic!==undefined" class="country-container">
+  <div class="country-name">{{ currentOlympic.country }}</div>
+  <div class="stats-container">
+    <div class="stat-item">
+      <span class="stat-label">Number of entries</span>
+      <span class="stat-value">{{ currentOlympic.participations.length }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Total number medals</span>
+      <span class="stat-value">{{ medalsCount }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Total number of athletes</span>
+      <span class="stat-value">{{ athletesCount }}</span>
+    </div>
   </div>
+</div>
+<div id="lineChart">
+  <apx-chart
+    [series]="chartOptions.series!"
+    [chart]="chartOptions.chart!"
+    [xaxis]="chartOptions.xaxis!"
+    [yaxis]="chartOptions.yaxis!"
+    [dataLabels]="chartOptions.dataLabels!"
+    [grid]="chartOptions.grid!"
+    [stroke]="chartOptions.stroke!"
+  ></apx-chart>
+</div>
   

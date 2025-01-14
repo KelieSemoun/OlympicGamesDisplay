@@ -1,6 +1,10 @@
 <h2>Olympic games app</h2>
 <hr />
-<p>{{ (olympics$ | async)?.length }} data loaded</p>
+@if ((olympics$ | async)?.length ===  0){
+  <p>Failed to load Data</p>
+} @else { 
+  <p>{{ (olympics$ | async)?.length }} Data(s) successfully loaded</p>
+}
 <div id="chart">
     <apx-chart
       [series]="chartOptions.series!"

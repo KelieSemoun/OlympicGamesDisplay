@@ -32,19 +32,7 @@ export class HomeComponent implements OnInit {
   constructor(private olympicService: OlympicService, private router: Router) {}
   
   ngOnInit(): void {
-    this.olympics$ = this.olympicService.getOlympics()/*.pipe(
-      map((result): {id: string, country: string, medalsCount: number}[]=>{
-        if(result !== null){
-          return result!.map((obj: Olympic) =>{
-            return{
-              id: obj.id,
-              country: obj.country,
-              medalsCount: obj.participations.reduce((acc, participation) => acc +  Number(participation.medalsCount), 0)
-            }
-          })
-        }       
-      })
-    );*/
+    this.olympics$ = this.olympicService.getOlympics();
     this.olympics$.subscribe(
       (values: Olympic[]) => {
         values.map((val) => ({
@@ -52,20 +40,9 @@ export class HomeComponent implements OnInit {
           country: val.country,
           medalsCount: val.participations.reduce((acc, participation) => acc +  Number(participation.medalsCount), 0)
         })).flatMap((data) => this.customOlympics.push(data));
-        console.log("Before error call : ", this.customOlympics);
-        console.log(this.customOlympics[0].country);
         this.initializeChartOptions();
       }
     )    
-
-    /*this.olympicService.getOlympics().subscribe(data => {
-      if(data !== null){
-        for(let i=0 ; i<data.length ; i++){
-          this.olympics.push(new Olympic(data[i].country, ));
-        }
-        this.initializeChartOptions();
-      }
-    });*/ 
   }
 
   private initializeChartOptions() : void{
@@ -98,7 +75,6 @@ export class HomeComponent implements OnInit {
         }
       ]
     };
-    console.log(this.chartOptions);
   }
 
   private getCountryLabels(): string[]{

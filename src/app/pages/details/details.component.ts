@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { find, map, Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import {
@@ -8,7 +8,6 @@ import {
   ApexChart,
   ApexXAxis,
   ApexDataLabels,
-  ApexTitleSubtitle,
   ApexStroke,
   ApexGrid
 } from "ng-apexcharts";
@@ -22,7 +21,6 @@ export type ChartOptions = {
   dataLabels: ApexDataLabels;
   grid: ApexGrid;
   stroke: ApexStroke;
-  title: ApexTitleSubtitle;
 };
 
 @Component({
@@ -34,23 +32,24 @@ export class DetailsComponent implements OnInit{
   @ViewChild("lineChart") chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
   public olympics$!: Observable<Olympic[]>;
-  private currentOlympic!: Olympic;
+  public currentOlympic!: Olympic;
+  public medalsCount!: number;
+  public athletesCount!: number;
 
   constructor(private olympicService: OlympicService,
               private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
-    
+  ngOnInit(): void {    
     this.olympics$ = this.olympicService.getOlympics();
     this.olympics$.pipe(
         map((olympics : Olympic[]) => olympics.find(olympic => olympic.id === Number(this.route.snapshot.params['id'])))
     ).subscribe(res => {
       this.currentOlympic = res!;
       this.initializeChartOptions();
+      this.medalsCount = this.currentOlympic.participations.reduce((acc, participation) => acc +  Number(participation.medalsCount), 0)
+      this.athletesCount = this.currentOlympic.participations.reduce((acc, participation) => acc +  Number(participation.athleteCount), 0)
     });
-
   }
-
 
   private initializeChartOptions() {
     this.chartOptions = {
@@ -72,10 +71,6 @@ export class DetailsComponent implements OnInit{
       },
       stroke: {
         curve: "straight"
-      },
-      title: {
-        text: this.currentOlympic.country,
-        align: "center"
       },
       grid: {
         row: {
