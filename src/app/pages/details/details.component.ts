@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { find, map, Observable, tap } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import {
@@ -12,6 +12,7 @@ import {
   ApexStroke,
   ApexGrid
 } from "ng-apexcharts";
+import { ActivatedRoute } from '@angular/router';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -32,26 +33,25 @@ export class DetailsComponent implements OnInit{
   @ViewChild("lineChart") chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
   public olympics$!: Observable<Olympic[]>;
+  private currentOlympic!: Olympic;
 
-  constructor(private olympicService: OlympicService) {}
+  constructor(private olympicService: OlympicService,
+              private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     
-    /*this.olympics$ = this.olympicService.getOlympics();
-    this.currentOlympic = this.olympics$.map(
-      (values: Olympic[]) => {
-        values.find(
-          (olympic : Olympic) => {
-            olympic.id === this.idCountryTest;
-          }
-        );
-        this.initializeChartOptions();
-      }
-    );*/
+    this.olympics$ = this.olympicService.getOlympics();
+    this.olympics$.pipe(
+        map((olympics : Olympic[]) => olympics.find(olympic => olympic.id === Number(this.route.snapshot.params['id'])))
+    ).subscribe(res => {
+      this.currentOlympic = res!;
+      this.initializeChartOptions();
+    });
+
   }
 
 
-  /*private initializeChartOptions() {
+  private initializeChartOptions() {
     this.chartOptions = {
       series: [
         {
@@ -73,7 +73,7 @@ export class DetailsComponent implements OnInit{
         curve: "straight"
       },
       title: {
-        text: this.currentOlympic?.country,
+        text: this.currentOlympic.country,
         align: "center"
       },
       grid: {
@@ -104,5 +104,5 @@ export class DetailsComponent implements OnInit{
 
     }
     return []
-  }*/
+  }
 }
