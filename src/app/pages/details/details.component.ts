@@ -18,6 +18,7 @@ export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
   dataLabels: ApexDataLabels;
   grid: ApexGrid;
   stroke: ApexStroke;
@@ -55,8 +56,8 @@ export class DetailsComponent implements OnInit{
     this.chartOptions = {
       series: [
         {
-          name: "test",
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+          name: "medals",
+          data: this.getMedalsData()
         }
       ],
       chart: {
@@ -83,26 +84,29 @@ export class DetailsComponent implements OnInit{
         }
       },
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep"
-        ]
+        categories: this.getXAxisCategories()
+      },
+      yaxis: {
+        min: 0,
+        max: 150,
+        tickAmount: 10
       }
     };
   }
 
-  private getMedalsData() : Number[] {
-    let res: Number[] = [];
+  private getMedalsData() : number[] {
+    let res: number[] = [];
     for(let i=0 ; i<this.currentOlympic.participations.length; i++){
-
+      res.push(this.currentOlympic.participations[i].medalsCount)
     }
-    return []
+    return res
+  }
+
+  private getXAxisCategories() : string[] {
+    let res: string[] = [];
+    for(let i=0 ; i<this.currentOlympic.participations.length; i++){
+      res.push(String(this.currentOlympic.participations[i].year))
+    }
+    return res
   }
 }
