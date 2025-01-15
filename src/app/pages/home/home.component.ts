@@ -15,7 +15,9 @@ export type ChartOptions = {
   chart: ApexChart;
   responsive: ApexResponsive[];
   labels: string[];
+  legend: ApexLegend;
   dataLabels: ApexDataLabels;
+  title: ApexTitleSubtitle;
 };
 
 @Component({
@@ -58,8 +60,12 @@ export class HomeComponent implements OnInit {
         }
       },
       labels: this.getCountryLabels(),
+      legend: {
+        position:'right',
+        offsetY: 75
+      },
       dataLabels: {
-        enabled: false
+        enabled: true
       },
       responsive: [
         {
@@ -67,13 +73,14 @@ export class HomeComponent implements OnInit {
           options: {
             chart: {
               width: 400
-            },
-            legend: {
-              position: "bottom"
             }
           }
         }
-      ]
+      ],
+      title: {
+        text: "Distribution of Olympic Medals earned by country",
+        align: "center",
+      }
     };
   }
 
