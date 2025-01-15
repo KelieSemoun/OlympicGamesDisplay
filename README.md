@@ -1,8 +1,10 @@
-# OlympicGamesStarter
+# Olympic Games Display
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
 
 Don't forget to install your node_modules before starting (`npm install`).
+
+Original project made by OpenClassrooms
 
 ## Development server
 
@@ -12,18 +14,14 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Where to start
+## How to use
 
-As you can see, an architecture has already been defined for the project. It is just a suggestion, you can choose to use your own. The predefined architecture includes (in addition to the default angular architecture) the following:
+You land on the landing page of the website, showing a pie chart displaying the distribution of Olympic Medals earned by different countries. Hovering over any slice will display the affiliated country with its number of medals earned throughout its participations.
 
-- `components` folder: contains every reusable components
-- `pages` folder: contains components used for routing
-- `core` folder: contains the business logic (`services` and `models` folders)
+Clicking on any slice will redirect you to the details page of the clicked country, showing a line graph displaying how many medals the country had earned in a participation and some information on the number of olympic games the country participated and the number of athletes that signed up.
 
-I suggest you to start by understanding this starter code. Pay an extra attention to the `app-routing.module.ts` and the `olympic.service.ts`.
+Clicking on "Return to home page" will redirect you to the home page.
 
-Once mastered, you should continue by creating the typescript interfaces inside the `models` folder. As you can see I already created two files corresponding to the data included inside the `olympic.json`. With your interfaces, improve the code by replacing every `any` by the corresponding interface.
+Charts created with ApexCharts, more info [here](https://apexcharts.com)
 
-You're now ready to implement the requested features.
-
-Good luck!
+Created by KelieSemoun
