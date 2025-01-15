@@ -41,6 +41,7 @@ export class DetailsComponent implements OnInit{
 
   ngOnInit(): void {    
     this.olympics$ = this.olympicService.getOlympics();
+    //Transformation of the initial Data array into a single Olympic object that has the id and its id route snapshot corresponding
     this.olympics$.pipe(
         map((olympics : Olympic[]) => olympics.find(olympic => olympic.id === Number(this.route.snapshot.params['id'])))
     ).subscribe(res => {

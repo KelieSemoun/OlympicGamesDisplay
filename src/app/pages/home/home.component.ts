@@ -29,12 +29,13 @@ export class HomeComponent implements OnInit {
   @ViewChild("chart", {static: false}) chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
   public olympics$!: Observable<Olympic[]>;
-  private customOlympics: {id: number, country: string, medalsCount: number}[] = [];
+  private customOlympics: {id: number, country: string, medalsCount: number}[] = []; // Expected outcome of data transformation for this class
 
   constructor(private olympicService: OlympicService, private router: Router) {}
   
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
+    // Transformation of the initial data array and pushes each transformed component into customOlympics
     this.olympics$.subscribe(
       (values: Olympic[]) => {
         values.map((val) => ({
