@@ -3,6 +3,19 @@
 } @else { 
   <p>{{ (olympics$ | async)?.length }} Data(s) successfully loaded</p>
 }
+<div *ngIf="customOlympics!==undefined" class="graph-title-container">
+  <div class="graph-title-name">Distribution of Olympic Medals earned by country</div>
+  <div class="stats-container">
+    <div class="stat-item">
+      <span class="stat-label">Number of OG</span>
+      <span class="stat-value">{{ customOlympics[0].ogNumber }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Number of countries</span>
+      <span class="stat-value">{{ customOlympics.length }}</span>
+    </div>
+  </div>
+</div>
 <div id="chart">
     <apx-chart
       [series]="chartOptions.series!"
@@ -11,6 +24,5 @@
       [legend]="chartOptions.legend!"
       [dataLabels]="chartOptions.dataLabels!"
       [responsive]="chartOptions.responsive!"
-      [title]="chartOptions.title!"
     ></apx-chart>
   </div>

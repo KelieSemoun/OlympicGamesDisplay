@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { map, Observable, Subscription, tap } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import {
@@ -28,13 +28,14 @@ export type ChartOptions = {
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
-export class DetailsComponent implements OnInit{
+export class DetailsComponent implements OnInit, OnDestroy{
   @ViewChild("lineChart") chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
   public olympics$!: Observable<Olympic[]>;
   public currentOlympic!: Olympic;
   public medalsCount!: number;
   public athletesCount!: number;
+  private subscription!: Subscription;
 
   constructor(private olympicService: OlympicService,
               private route: ActivatedRoute) {}
@@ -42,7 +43,7 @@ export class DetailsComponent implements OnInit{
   ngOnInit(): void {    
     this.olympics$ = this.olympicService.getOlympics();
     //Transformation of the initial Data array into a single Olympic object that has the id and its id route snapshot corresponding
-    this.olympics$.pipe(
+    this.subscription = this.olympics$.pipe(
         map((olympics : Olympic[]) => olympics.find(olympic => olympic.id === Number(this.route.snapshot.params['id'])))
     ).subscribe(res => {
       this.currentOlympic = res!;
@@ -50,6 +51,10 @@ export class DetailsComponent implements OnInit{
       this.medalsCount = this.currentOlympic.participations.reduce((acc, participation) => acc +  Number(participation.medalsCount), 0)
       this.athletesCount = this.currentOlympic.participations.reduce((acc, participation) => acc +  Number(participation.athleteCount), 0)
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private initializeChartOptions() {
