@@ -1,9 +1,4 @@
 <a routerLink="">Return to home page</a>
-@if (currentOlympic !== undefined) {
-  <p>Data successfully loaded</p>
-} @else {
-  <p>Failed to load country details</p>
-}
 <div *ngIf="currentOlympic!==undefined" class="country-container">
   <div class="country-name">{{ currentOlympic.country }}</div>
   <div class="stats-container">
