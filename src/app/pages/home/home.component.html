@@ -1,8 +1,3 @@
-@if ((olympics$ | async)?.length ===  0){
-  <p>Failed to load Data</p>
-} @else { 
-  <p>{{ (olympics$ | async)?.length }} Data(s) successfully loaded</p>
-}
 <div *ngIf="customOlympics!==undefined" class="graph-title-container">
   <div class="graph-title-name">Distribution of Olympic Medals earned by country</div>
   <div class="stats-container">
