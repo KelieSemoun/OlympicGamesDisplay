@@ -24,9 +24,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-details',
-  templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+    selector: 'app-details',
+    templateUrl: './details.component.html',
+    styleUrl: './details.component.scss',
+    standalone: false
 })
 export class DetailsComponent implements OnInit, OnDestroy{
   @ViewChild("lineChart") chart!: ChartComponent;
